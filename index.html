@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy â Hold the Standard</title>
+  <meta name="description" content="Privacy policy for Hold the Standard (The Standard), an iOS fitness and habit tracking app by Nathan Kramer.">
+  <style>
+    :root {
+      --terracotta: #C76547;
+      --cream: #F8F2E9;
+      --espresso: #2A1C16;
+      --sage: #87A47A;
+      --muted: #6E5C50;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--espresso);
+      background: var(--cream);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    h1 {
+      font-family: "New York", Georgia, serif;
+      font-weight: 800;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.15;
+      margin: 0 0 8px;
+      color: var(--terracotta);
+      letter-spacing: -0.01em;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin: 0 0 32px;
+    }
+    .meta {
+      background: white;
+      border-left: 4px solid var(--sage);
+      padding: 14px 18px;
+      border-radius: 6px;
+      margin: 0 0 32px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .meta strong { color: var(--espresso); }
+    h2 {
+      font-family: "New York", Georgia, serif;
+      font-weight: 700;
+      font-size: 22px;
+      margin: 40px 0 12px;
+      color: var(--terracotta);
+      letter-spacing: -0.005em;
+    }
+    h3 {
+      font-weight: 600;
+      font-size: 17px;
+      margin: 20px 0 6px;
+      color: var(--espresso);
+    }
+    p, ul, ol { margin: 0 0 14px; }
+    ul, ol { padding-left: 22px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--terracotta); }
+    a:hover { text-decoration: none; }
+    hr {
+      border: 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      margin: 36px 0;
+    }
+    code, .email {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95em;
+      background: rgba(135, 164, 122, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--espresso);
+    }
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --cream: #1a1410; --espresso: #f3ecde; --muted: #b8a597; }
+      .meta { background: #2a201a; }
+      hr, .footer { border-color: rgba(255,255,255,0.1); }
+      code, .email { background: rgba(135, 164, 122, 0.15); color: #f3ecde; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+<h1>Privacy Policy</h1>
+<p class="subtitle">Hold the Standard <span aria-hidden="true">Â·</span> a fitness &amp; habit tracking iOS app</p>
+
+<div class="meta">
+  <strong>Last updated:</strong> May 23, 2026 <span aria-hidden="true">Â·</span>
+  <strong>Effective date:</strong> May 23, 2026
+</div>
+
+<p>This is the privacy policy for <em>Hold the Standard</em> (formerly internally called &ldquo;The Standard&rdquo;), an iOS fitness and habit tracking app made by Nathan Kramer. Plain English version of what we collect, where it lives, and what we promise.</p>
+
+<hr>
+
+<h2>1. What data we collect</h2>
+
+<p>When you use the app, the following data is collected:</p>
+
+<h3>From you, during onboarding</h3>
+<ul>
+  <li><strong>Name</strong> (optional &mdash; you can skip this)</li>
+  <li><strong>Birth year, biological sex, height, weight</strong></li>
+  <li><strong>Activity level</strong> (sedentary, light, moderate, active, very active)</li>
+  <li><strong>Goal</strong> (lose weight, maintain, build muscle, recomposition)</li>
+</ul>
+<p>This is used to compute your daily calorie and macro targets via the Mifflin&ndash;St Jeor equation. None of this is shared with anyone.</p>
+
+<h3>From your daily logging</h3>
+<ul>
+  <li><strong>Food entries</strong> &mdash; calories, protein, fat, carbs, optional note, and the source (manual entry, photo AI, or text AI)</li>
+  <li><strong>Water entries</strong> &mdash; amount, time</li>
+  <li><strong>Workout entries / habits</strong> &mdash; title, completion time</li>
+  <li><strong>Streak history</strong> &mdash; which days you hit your targets</li>
+</ul>
+
+<h3>Photos &amp; meal descriptions</h3>
+<p>When you take a photo of food to log it, the <strong>photo is sent to OpenAI&rsquo;s API</strong> for analysis (calories and macros). The photo is processed in-memory and is <strong>NOT permanently stored</strong> on our servers, nor on OpenAI&rsquo;s. OpenAI&rsquo;s standard API policy applies: the image is not used to train their models. The same applies to typed meal descriptions when you use the &ldquo;Tell me what you ate&rdquo; flow.</p>
+
+<h3>From Apple Health (only if you grant permission)</h3>
+<ul>
+  <li><strong>Steps</strong></li>
+  <li><strong>Active calories burned</strong></li>
+  <li><strong>Workouts</strong> (count, type, duration)</li>
+  <li><strong>Water consumed</strong> (so we don&rsquo;t double-count manual logs)</li>
+  <li><strong>Body mass</strong> (your weight, for staying in sync with Health)</li>
+</ul>
+
+<h3>From your Apple Sign In</h3>
+<ul>
+  <li>A <strong>unique Apple-issued user ID</strong> (so we know it&rsquo;s you across launches)</li>
+  <li>An <strong>email address</strong> (either your real one or an Apple-relayed private one &mdash; your choice during sign-in)</li>
+</ul>
+
+<h3>What we DON&rsquo;T collect</h3>
+<ul>
+  <li>Your location</li>
+  <li>Your contacts</li>
+  <li>Your photos library (we only use the camera, and only when you choose to)</li>
+  <li>Any social media accounts</li>
+  <li>Analytics / tracking events tied to advertising</li>
+  <li>Anything from other apps on your phone</li>
+</ul>
+
+<hr>
+
+<h2>2. Where your data lives</h2>
+
+<h3>On your iPhone first (local-first design)</h3>
+<p>Everything you log goes into a local database on your device (SwiftData / SQLite). The app works fully offline.</p>
+
+<h3>On our cloud (Supabase) &mdash; only when you&rsquo;re signed in</h3>
+<p>Your daily logs sync to a Supabase project so you can access them from another device. The cloud database has <strong>Row-Level Security policies</strong> that prevent anyone other than your own authenticated account from reading or writing your rows. Even our database administrators can only see your data with explicit access permissions.</p>
+
+<h3>Apple Health data &mdash; stays on your device</h3>
+<p>We <em>read</em> from Apple Health when you grant permission, but Apple Health data is <strong>never transmitted to our cloud</strong>. Per Apple&rsquo;s HealthKit rules (which we strictly follow):</p>
+<ul>
+  <li>Health data is not used for advertising or any data-mining purposes</li>
+  <li>Health data is not shared with any third parties</li>
+  <li>Health data is not stored in our cloud servers</li>
+  <li>Health data is not used outside of providing this app&rsquo;s functionality to you</li>
+</ul>
+
+<h3>OpenAI (food photo &amp; description analysis only)</h3>
+<p>When you log a meal via photo or description, the data is sent over HTTPS to OpenAI&rsquo;s API for one-time analysis. We don&rsquo;t store the photo or text. OpenAI&rsquo;s API does not use API images or prompts to train their models (per their published policy).</p>
+
+<h3>Authentication (Supabase + Apple)</h3>
+<p>Your Apple Sign In session lives in your iPhone&rsquo;s secure storage. The session token is sent to Supabase only to authenticate API calls.</p>
+
+<hr>
+
+<h2>3. What we never do</h2>
+<ul>
+  <li><strong>We do NOT sell your data.</strong> To anyone. Ever.</li>
+  <li><strong>We do NOT share your data with advertisers.</strong> This app has no ads and no advertising integrations.</li>
+  <li><strong>We do NOT use your data for any purpose other than running this app for you.</strong></li>
+  <li><strong>We do NOT track you across other apps or websites.</strong></li>
+  <li><strong>We do NOT use Apple Health data for marketing, advertising, or any non-app-functionality purpose.</strong> (This is Apple&rsquo;s rule. We don&rsquo;t even want to.)</li>
+</ul>
+
+<hr>
+
+<h2>4. Who can see your data</h2>
+<ul>
+  <li><strong>You.</strong> Always.</li>
+  <li><strong>Nobody else by default.</strong> Our Supabase database has Row-Level Security policies that match your authenticated session ID against your data rows. If the session ID doesn&rsquo;t match, the database returns nothing.</li>
+  <li>In rare cases, <strong>our development team</strong> may need to access database tables for debugging or to fulfill your support request &mdash; and only with your knowledge.</li>
+</ul>
+
+<hr>
+
+<h2>5. Deleting your account</h2>
+<p>You have two options:</p>
+<ol>
+  <li><strong>Sign out</strong> &mdash; From the dashboard, tap the gear icon &rarr; &ldquo;Sign out.&rdquo; Your local data stays on the device. Your cloud data stays on our servers until you delete the account (option 2).</li>
+  <li><strong>Full account deletion</strong> &mdash; Email us at <span class="email">feedback@thestandard.app</span> with the subject &ldquo;Delete my account&rdquo; from the email address associated with your Apple Sign In. We will:
+    <ul>
+      <li>Delete your authentication record from Supabase</li>
+      <li>Delete all your profile, food, water, workout, and habit data from our cloud database</li>
+      <li>Confirm completion within <strong>7 days</strong></li>
+    </ul>
+  </li>
+</ol>
+<p>Deletion is permanent &mdash; we cannot restore data after it&rsquo;s deleted.</p>
+
+<hr>
+
+<h2>6. Changes to this policy</h2>
+<p>If we materially change this policy, we&rsquo;ll update the &ldquo;Last updated&rdquo; date at the top and notify active users in-app on next launch. If you don&rsquo;t agree with a change, you can delete your account (Section 5).</p>
+
+<hr>
+
+<h2>7. Children</h2>
+<p>This app is not intended for users under 14. The onboarding flow requires users to be at least 14 years old. We do not knowingly collect data from anyone under 14.</p>
+
+<hr>
+
+<h2>8. Contact</h2>
+<p>Questions, concerns, account deletion requests, or just feedback?</p>
+<p><strong>Email:</strong> <span class="email">feedback@thestandard.app</span></p>
+<p>We respond to every email. Usually within 48 hours.</p>
+
+<div class="footer">
+  Hold the Standard is a personal project by Nathan Kramer (Apple Developer Team M4Q9LT3R7S).<br>
+  This privacy policy is written in plain English and is intended to be honest, not legalistic.<br>
+  If anything is unclear, email us and we&rsquo;ll explain.
+</div>
+
+</main>
+</body>
+</html>
