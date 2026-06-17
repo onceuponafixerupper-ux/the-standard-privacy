@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hold the Standard — Social Listener</title>
+<style>
+  :root {
+    --terra: #C75B39;
+    --cream: #FAF5EF;
+    --sage: #7A9E7E;
+    --espresso: #2C1810;
+    --amber: #D4A045;
+    --mauve: #6B4C6E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--cream);
+    color: var(--espresso);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--espresso), #4a2e1e);
+    padding: 20px 16px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .header .sub {
+    color: var(--amber);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: #3a2015;
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    color: white;
+    border-bottom-color: var(--terra);
+  }
+  .content { padding: 12px; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid #e8e0d8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card h3 {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: var(--espresso);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card p, .card li {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .card ul { padding-left: 16px; }
+  .card li { margin-bottom: 4px; }
+  .search-link {
+    display: block;
+    background: linear-gradient(135deg, var(--terra), #A84B2E);
+    color: white;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 8px;
+    transition: filter 0.15s;
+  }
+  .search-link:active { filter: brightness(0.9); }
+  .search-link .platform {
+    font-size: 11px;
+    opacity: 0.8;
+    display: block;
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .search-link.secondary {
+    background: white;
+    color: var(--terra);
+    border: 2px solid var(--terra);
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .badge.hot { background: #fde8e0; color: var(--terra); }
+  .badge.daily { background: #e8f0e8; color: var(--sage); }
+  .badge.reply { background: #f0e8f0; color: var(--mauve); }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: var(--espresso);
+    margin: 16px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e8e0d8;
+  }
+  .reply-template {
+    background: var(--cream);
+    border-left: 3px solid var(--terra);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--espresso);
+    line-height: 1.5;
+    margin: 8px 0;
+    position: relative;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: var(--terra);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy-btn.copied { background: var(--sage); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .tip {
+    background: #fdf8f0;
+    border: 1px solid var(--amber);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--espresso);
+    margin-bottom: 10px;
+  }
+  .tip strong { color: var(--amber); }
+  .counter {
+    text-align: center;
+    padding: 20px;
+    font-family: Georgia, serif;
+  }
+  .counter .num {
+    font-size: 48px;
+    color: var(--terra);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .counter .label {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .check.done {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+  .check-text { font-size: 13px; line-height: 1.4; }
+  .check-text.done { text-decoration: line-through; color: #aaa; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Hold the Standard</h1>
+  <div class="sub">Social Listening Command Center</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('hunt')">Find Posts</div>
+  <div class="tab" onclick="showPanel('reply')">Reply Templates</div>
+  <div class="tab" onclick="showPanel('daily')">Daily Checklist</div>
+  <div class="tab" onclick="showPanel('track')">Track Progress</div>
+</div>
+
+<div class="content">
+
+<!-- FIND POSTS PANEL -->
+<div class="panel active" id="hunt">
+  <div class="tip">
+    <strong>How this works:</strong> Each button opens a pre-built search on the platform. Scan for posts where someone needs exactly what Sarge offers. Reply with value, not a pitch. Only mention the app when they literally ask for one.
+  </div>
+
+  <div class="section-title">Reddit — Where She Googles at Midnight</div>
+
+  <a class="search-link" href="https://www.reddit.com/r/loseit/search/?q=%22I+keep+quitting%22+OR+%22can%27t+stay+consistent%22+OR+%22fell+off+the+wagon%22&sort=new&t=week" target="_blank">
+    "I keep quitting" / "fell off the wagon"
+    <span class="platform">r/loseit — 3.6M members — sorted by New this week</span>
+  </a>
+
+  <a class="search-link" href="https://www.reddit.com/r/loseit/search/?q=%22what+app%22+OR+%22which+app%22+OR+%22app+recommendation%22+OR+%22best+app%22&sort=new&t=week" target="_blank">
+    "What app do you use?"
+    <span class="platform">r/loseit — people literally asking for YOUR app</span>
+  </a>
+
+  <a class="search-link" href="https://www.reddit.com/r/CICO/search/?q=%22over+40%22+OR+%22accountability%22+OR+%22simple%22+OR+%22overwhelmed%22&sort=new&t=week" target="_blank">
+    "Over 40" + "accountability" + "overwhelmed"
+    <span class="platform">r/CICO — 700K members</span>
+  </a>
+
+  <a class="search-link" href="https://www.reddit.com/r/PetiteFitness/search/?q=%22tracker%22+OR+%22app%22+OR+%22accountability%22+OR+%22consistency%22&sort=new&t=week" target="_blank">
+    Tracker / accountability / consistency
+    <span class="platform">r/PetiteFitness — 400K members, mostly women</span>
+  </a>
+
+  <a class="search-link" href="https://www.reddit.com/r/xxfitness/search/?q=%22over+40%22+OR+%22protein+tracking%22+OR+%22simple+tracker%22+OR+%22keep+quitting%22&sort=new&t=week" target="_blank">
+    Women's fitness + tracking + quitting
+    <span class="platform">r/xxfitness — 1M members, women-only</span>
+  </a>
+
+  <a class="search-link secondary" href="https://www.reddit.com/search/?q=%22weight+loss+app%22+OR+%22fitness+app%22+OR+%22calorie+tracker%22+%22over+40%22&sort=new&t=week" target="_blank">
+    All of Reddit: "weight loss app" + "over 40"
+    <span class="platform">Global Reddit search — cast a wide net</span>
+  </a>
+
+  <div class="section-title">X / Twitter — Real-Time Venting</div>
+
+  <a class="search-link" href="https://x.com/search?q=%22I+need+accountability%22+OR+%22can%27t+stick+to+a+diet%22+OR+%22tired+of+tracking%22&f=live" target="_blank">
+    "I need accountability" / "tired of tracking"
+    <span class="platform">X — Live posts, real-time</span>
+  </a>
+
+  <a class="search-link" href="https://x.com/search?q=%22fitness+app%22+OR+%22weight+loss+app%22+OR+%22calorie+app%22+-%22ad%22+-%22sponsored%22&f=live" target="_blank">
+    People talking about fitness apps
+    <span class="platform">X — Filtered out ads/sponsored</span>
+  </a>
+
+  <a class="search-link" href="https://x.com/search?q=%22myfitnesspal%22+%22hate%22+OR+%22quit%22+OR+%22overwhelm%22+OR+%22annoying%22&f=live" target="_blank">
+    People frustrated with MyFitnessPal
+    <span class="platform">X — Competitor dissatisfaction = your opening</span>
+  </a>
+
+  <div class="section-title">TikTok — Comment on Viral Posts</div>
+
+  <a class="search-link" href="https://www.tiktok.com/search?q=weight%20loss%20over%2040%20women&t=0" target="_blank">
+    "Weight loss over 40 women"
+    <span class="platform">TikTok — Find creators in your niche to comment on</span>
+  </a>
+
+  <a class="search-link" href="https://www.tiktok.com/search?q=calorie%20counting%20tips%20simple&t=0" target="_blank">
+    "Calorie counting tips simple"
+    <span class="platform">TikTok — Engage in comments with Sarge wisdom</span>
+  </a>
+
+  <a class="search-link" href="https://www.tiktok.com/search?q=protein%20tracking%20women&t=0" target="_blank">
+    "Protein tracking women"
+    <span class="platform">TikTok — Your exact feature set, their exact need</span>
+  </a>
+
+  <div class="section-title">Facebook Groups — Search Inside Groups</div>
+
+  <a class="search-link" href="https://www.facebook.com/search/groups/?q=women%20over%2040%20weight%20loss" target="_blank">
+    Find "Women Over 40 Weight Loss" groups
+    <span class="platform">Facebook — Join the top 5-10 groups you find</span>
+  </a>
+
+  <a class="search-link secondary" href="https://www.facebook.com/search/posts/?q=%22what+app%22+%22weight+loss%22+%22tracking%22" target="_blank">
+    "What app" + "weight loss" posts
+    <span class="platform">Facebook — People asking for exactly what you built</span>
+  </a>
+
+  <div class="section-title">Google Alerts — Passive Discovery</div>
+  <div class="card">
+    <h3>Set these up once (free, runs forever)</h3>
+    <p>Go to <a href="https://www.google.com/alerts" target="_blank" style="color: var(--terra); font-weight: 600;">google.com/alerts</a> and create alerts for:</p>
+    <ul>
+      <li><strong>"best weight loss app 2026"</strong> — catch every listicle being written</li>
+      <li><strong>"fitness app" "over 40"</strong> — your exact audience searching</li>
+      <li><strong>"simple calorie tracker"</strong> — people who want what you built</li>
+      <li><strong>"Hold the Standard" app</strong> — track your own brand mentions</li>
+    </ul>
+    <p style="margin-top:8px; font-size:12px; color:#888;">Set delivery to "as it happens" → email. Takes 30 seconds per alert.</p>
+  </div>
+</div>
+
+<!-- REPLY TEMPLATES PANEL -->
+<div class="panel" id="reply">
+  <div class="tip">
+    <strong>The rule:</strong> Lead with value. Sound like Sarge without naming Sarge. Only mention the app when they ASK for one. Tap "Copy" to grab a template, then personalize the first line to their specific post.
+  </div>
+
+  <div class="section-title">When someone says "I keep falling off"</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    The problem isn't willpower — it's that you're tracking 47 things and burning out by Tuesday. Strip it down to three: hit your protein, drink your water, move your body. That's the whole standard for today. Not the whole week. Not a "plan." Just today. Win today, then we'll talk about tomorrow.
+  </div>
+
+  <div class="section-title">When someone asks "what app do you use?"</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    I actually just started using one called Hold the Standard — it only tracks three things (food, water, movement) because honestly that's all that ever actually moved the needle for me. It has this AI thing where you just photograph your plate and it estimates your macros, which saves me from the "weigh every almond" trap that killed me on MFP. It's new but I'm liking the simplicity.
+  </div>
+
+  <div class="section-title">When someone is frustrated with MyFitnessPal / Noom</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    I felt the same way. I spent more time LOGGING than LIVING. The thing that finally clicked for me was realizing I only needed to track three things consistently to see results: protein (the one macro that actually matters for body comp), water (most of us are chronically dehydrated), and some kind of movement. Everything else was noise making me feel like a failure.
+  </div>
+
+  <div class="section-title">When someone posts a win / streak</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    [X] days isn't luck. That's discipline compounding. Most people don't make it past day 3 — you held the standard when it was hard and nobody was watching. That's the part that changes you. Keep going.
+  </div>
+
+  <div class="section-title">Commenting on TikTok fitness videos</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    This is why I believe in 3 things, not 30. Protein. Water. Movement. Everything else is noise that makes you quit by week 2. The women who actually keep the weight off aren't doing more — they're doing less, consistently.
+  </div>
+
+  <div class="section-title">When someone over 40 asks where to start</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    44F here. The best thing I did was stop trying to do everything at once. Here's what actually works: (1) Get your protein to at least 100g/day — this is the single biggest lever for body comp over 40. (2) Drink half your bodyweight in oz of water. (3) Move for 20+ minutes, any kind. That's it. That's your standard for this week. No meal prep empire. No 5am gym ritual. Just those three things. You can absolutely do this.
+  </div>
+
+  <div class="section-title">Short version for X / Twitter</div>
+  <div class="reply-template">
+    <button class="copy-btn" onclick="copyTemplate(this)">Copy</button>
+    Three things. Protein, water, movement. That's the whole standard. Win today — tomorrow will take care of itself.
+  </div>
+</div>
+
+<!-- DAILY CHECKLIST PANEL -->
+<div class="panel" id="daily">
+  <div class="card">
+    <h3>Daily Engagement Routine</h3>
+    <p style="margin-bottom:10px; font-size:12px; color:#888;">Tap to check off. Resets each time you reload. ~20 min/day total.</p>
+
+    <div class="section-title">Morning (5 min)</div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Check Reddit searches — reply to 2-3 posts with genuine advice</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Check X searches — reply to 1-2 posts or quote-tweet with value</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Post 1 TikTok/Reel (batch-create on weekends)</div>
+    </div>
+
+    <div class="section-title">Afternoon (5 min)</div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Scroll Facebook groups — comment encouragingly on 5+ posts</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Comment on 3 TikTok videos in your niche (weight loss over 40)</div>
+    </div>
+
+    <div class="section-title">Evening (5 min)</div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Post 1 Sarge quote graphic to Facebook page + Instagram</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Reply to any comments on your own posts</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Post 1 TikTok/Reel (second of the day)</div>
+    </div>
+
+    <div class="section-title">Weekly (15 min, Sunday)</div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Batch-create 7-14 TikTok scripts for the week</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Create 7 Sarge quote graphics in Canva</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Check Google Alerts digest — respond to any relevant articles</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">Update the progress tracker (next tab)</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACK PROGRESS PANEL -->
+<div class="panel" id="track">
+  <div class="card counter">
+    <div class="num" id="dayCount">1</div>
+    <div class="label">days since launch</div>
+  </div>
+
+  <div class="card">
+    <h3>Account Setup Checklist</h3>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>TikTok:</strong> Create @sargesays (or @holdthestandardapp)</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Instagram:</strong> Create @sargesaysapp (or @holdthestandardapp)</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>X/Twitter:</strong> Register @holdthestandard</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Reddit:</strong> Create u/holdthestandard account</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Facebook:</strong> Create "Hold the Standard" page</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Google Alerts:</strong> Set up 4 keyword alerts</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Facebook Groups:</strong> Join top 10 weight-loss-over-40 groups</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Product Hunt:</strong> Schedule launch post</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text"><strong>Canva:</strong> Create first batch of 20 Sarge quote graphics</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Milestones</h3>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First TikTok posted</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">100 TikTok followers</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First TikTok with 1K+ views</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First Reddit post with 100+ upvotes</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First organic "what app is this?" comment</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First app download from social (check App Store Connect)</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">10 TestFlight testers from social</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First TikTok with 10K+ views</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">1,000 TikTok followers</div>
+    </div>
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check"></div>
+      <div class="check-text">First App Store review from organic user</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function copyTemplate(btn) {
+  const text = btn.parentElement.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function toggleCheck(item) {
+  const check = item.querySelector('.check');
+  const text = item.querySelector('.check-text');
+  if (check.classList.contains('done')) {
+    check.classList.remove('done');
+    check.innerHTML = '';
+    text.classList.remove('done');
+  } else {
+    check.classList.add('done');
+    check.innerHTML = '✓';
+    text.classList.add('done');
+  }
+}
+
+// Days since launch counter (June 17, 2026)
+const launchDate = new Date('2026-06-17');
+const today = new Date();
+const days = Math.max(1, Math.floor((today - launchDate) / (1000 * 60 * 60 * 24)) + 1);
+document.getElementById('dayCount').textContent = days;
+</script>
+
+</body>
+</html>
