@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarge Says on Social Media</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --terracotta: #C75B39;
+    --terracotta-dark: #A84A2E;
+    --cream: #FAF5EF;
+    --sage: #7A9E7E;
+    --sage-dark: #5C7E60;
+    --espresso: #2C1810;
+    --amber: #D4A045;
+    --mauve: #6B4C6E;
+    --mauve-light: #8B6C8E;
+    --card-bg: #FFFFFF;
+    --desktop-bg: #1a1210;
+    --taskbar-bg: rgba(44,24,16,0.92);
+    --window-header: #2C1810;
+    --window-body: #FAF5EF;
+    --shadow: 0 8px 32px rgba(0,0,0,0.3);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--desktop-bg);
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    cursor: default;
+  }
+
+  /* ── DESKTOP WALLPAPER ── */
+  .desktop {
+    width: 100vw;
+    height: calc(100vh - 64px);
+    background: linear-gradient(135deg, #1a1210 0%, #2C1810 30%, #3d251a 50%, #2C1810 70%, #1a1210 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .desktop::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(199,91,57,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .desktop-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .desktop-watermark h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    color: var(--cream);
+    letter-spacing: 2px;
+  }
+  .desktop-watermark p {
+    font-size: 18px;
+    color: var(--cream);
+    margin-top: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── DESKTOP ICONS ── */
+  .desktop-icons {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    transition: background 0.15s;
+    width: 90px;
+  }
+  .desktop-icon:hover { background: rgba(255,255,255,0.08); }
+  .desktop-icon:active { background: rgba(255,255,255,0.14); }
+
+  .desktop-icon .icon-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .desktop-icon .icon-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cream);
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    line-height: 1.2;
+  }
+
+  .icon-scout { background: linear-gradient(135deg, var(--sage), var(--sage-dark)); }
+  .icon-writer { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); }
+  .icon-creator { background: linear-gradient(135deg, var(--amber), #b88a30); }
+  .icon-scripts { background: linear-gradient(135deg, var(--mauve), var(--mauve-light)); }
+  .icon-analytics { background: linear-gradient(135deg, #4A90D9, #357ABD); }
+  .icon-settings { background: linear-gradient(135deg, #666, #444); }
+
+  /* ── TASKBAR (DOCK) ── */
+  .taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--taskbar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(199,91,57,0.2);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 9999;
+  }
+
+  .taskbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 24px;
+    padding-right: 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .taskbar-brand .sarge-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .taskbar-brand span {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .taskbar-apps {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .taskbar-app {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .taskbar-app:hover { background: rgba(255,255,255,0.08); }
+  .taskbar-app.active { background: rgba(199,91,57,0.2); }
+  .taskbar-app.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: var(--terracotta);
+    border-radius: 2px;
+  }
+
+  .taskbar-app .ta-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .taskbar-app .ta-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(250,245,239,0.8);
+  }
+
+  .taskbar-clock {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(250,245,239,0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.3;
+  }
+
+  /* ── WINDOWS ── */
+  .window {
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: none;
+    min-width: 480px;
+    min-height: 340px;
+    resize: both;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .window.open { display: flex; flex-direction: column; }
+  .window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - 64px) !important;
+    border-radius: 0;
+  }
+
+  .window-header {
+    background: var(--window-header);
+    padding: 0 16px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    cursor: grab;
+    flex-shrink: 0;
+  }
+  .window-header:active { cursor: grabbing; }
+
+  .window-dots {
+    display: flex;
+    gap: 8px;
+    margin-right: 12px;
+  }
+  .window-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: filter 0.15s;
+  }
+  .window-dot:hover { filter: brightness(1.3); }
+  .dot-close { background: #FF5F57; }
+  .dot-minimize { background: #FEBC2E; }
+  .dot-maximize { background: #28C840; }
+
+  .window-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(250,245,239,0.8);
+    flex: 1;
+    text-align: center;
+    margin-right: 60px;
+  }
+
+  .window-body {
+    flex: 1;
+    background: var(--window-body);
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  /* ── COMMON APP STYLES ── */
+  .app-hero {
+    text-align: center;
+    padding: 32px 24px;
+    margin: -24px -24px 24px;
+    position: relative;
+  }
+  .app-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .app-hero p {
+    font-size: 14px;
+    opacity: 0.7;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .scout-hero { background: linear-gradient(135deg, rgba(122,158,126,0.15), rgba(122,158,126,0.05)); color: var(--espresso); }
+  .writer-hero { background: linear-gradient(135deg, rgba(199,91,57,0.15), rgba(199,91,57,0.05)); color: var(--espresso); }
+  .creator-hero { background: linear-gradient(135deg, rgba(212,160,69,0.15), rgba(212,160,69,0.05)); color: var(--espresso); }
+  .scripts-hero { background: linear-gradient(135deg, rgba(107,76,110,0.15), rgba(107,76,110,0.05)); color: var(--espresso); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--espresso);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid rgba(44,24,16,0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+  }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--terracotta);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--terracotta-dark); }
+  .btn-sage {
+    background: var(--sage);
+    color: white;
+  }
+  .btn-sage:hover { background: var(--sage-dark); }
+  .btn-outline {
+    background: transparent;
+    color: var(--espresso);
+    border: 1.5px solid rgba(44,24,16,0.15);
+  }
+  .btn-outline:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-sage { background: rgba(122,158,126,0.15); color: var(--sage-dark); }
+  .tag-terra { background: rgba(199,91,57,0.15); color: var(--terracotta); }
+  .tag-amber { background: rgba(212,160,69,0.15); color: #96762e; }
+  .tag-mauve { background: rgba(107,76,110,0.15); color: var(--mauve); }
+
+  textarea, input[type="text"], input[type="url"], select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid rgba(44,24,16,0.12);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: var(--espresso);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  textarea:focus, input:focus, select:focus {
+    border-color: var(--terracotta);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--espresso);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── SCOUT APP ── */
+  .search-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .platform-card {
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+  .platform-card:hover { transform: translateY(-2px); }
+
+  .platform-card .platform-icon { font-size: 32px; margin-bottom: 8px; }
+  .platform-card .platform-name { font-weight: 600; font-size: 14px; }
+  .platform-card .platform-desc { font-size: 11px; opacity: 0.6; margin-top: 4px; }
+
+  .pc-reddit { background: rgba(255,69,0,0.08); }
+  .pc-reddit:hover { border-color: #FF4500; }
+  .pc-tiktok { background: rgba(0,0,0,0.05); }
+  .pc-tiktok:hover { border-color: #000; }
+  .pc-twitter { background: rgba(29,161,242,0.08); }
+  .pc-twitter:hover { border-color: #1DA1F2; }
+  .pc-facebook { background: rgba(24,119,242,0.08); }
+  .pc-facebook:hover { border-color: #1877F2; }
+  .pc-instagram { background: rgba(225,48,108,0.08); }
+  .pc-instagram:hover { border-color: #E1306C; }
+  .pc-youtube { background: rgba(255,0,0,0.08); }
+  .pc-youtube:hover { border-color: #FF0000; }
+
+  .search-terms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .search-term {
+    padding: 5px 12px;
+    background: rgba(199,91,57,0.1);
+    border: 1px solid rgba(199,91,57,0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--terracotta);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .search-term:hover { background: var(--terracotta); color: white; }
+
+  /* ── WRITER APP ── */
+  .template-grid { display: flex; flex-direction: column; gap: 12px; }
+
+  .template-card {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    align-items: flex-start;
+  }
+  .template-card .t-emoji {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    background: rgba(199,91,57,0.1);
+  }
+  .template-card .t-content { flex: 1; }
+  .template-card .t-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--espresso);
+    margin-bottom: 4px;
+  }
+  .template-card .t-preview {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .template-card .t-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* ── CREATOR APP ── */
+  .content-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .cal-header {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--espresso);
+    padding: 8px 0;
+    opacity: 0.5;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .cal-day:hover { border-color: var(--terracotta); }
+  .cal-day .cal-num { font-weight: 600; font-size: 13px; color: var(--espresso); }
+  .cal-day .cal-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 3px;
+  }
+  .cal-day.has-hook .cal-dot { background: var(--terracotta); }
+  .cal-day.has-edu .cal-dot { background: var(--sage); }
+  .cal-day.has-story .cal-dot { background: var(--amber); }
+  .cal-day.has-demo .cal-dot { background: var(--mauve); }
+  .cal-day.today { background: rgba(199,91,57,0.1); border-color: var(--terracotta); }
+
+  .pillar-legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .pillar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--espresso);
+  }
+  .pillar-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ── WRITER compose area ── */
+  .compose-area {
+    background: white;
+    border: 1.5px solid rgba(44,24,16,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .compose-area textarea {
+    border: none;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 120px;
+  }
+  .compose-area textarea:focus { border-color: transparent; }
+  .compose-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(44,24,16,0.06);
+  }
+  .char-count {
+    margin-left: auto;
+    font-size: 12px;
+    color: #999;
+  }
+
+  /* ── NOTIFICATION TOAST ── */
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--espresso);
+    color: var(--cream);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    z-index: 99999;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { transform: translateX(0); }
+
+  /* ── STARTUP SCREEN ── */
+  .startup-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--espresso);
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease;
+  }
+  .startup-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+  .startup-logo {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: pulse-boot 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-boot {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+
+  .startup-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .startup-subtitle {
+    font-size: 14px;
+    color: rgba(250,245,239,0.5);
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .startup-bar-track {
+    width: 240px;
+    height: 4px;
+    background: rgba(250,245,239,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .startup-bar-fill {
+    height: 100%;
+    background: var(--terracotta);
+    border-radius: 4px;
+    width: 0%;
+    animation: boot-fill 2s ease-in-out forwards;
+  }
+  @keyframes boot-fill {
+    0% { width: 0%; }
+    30% { width: 40%; }
+    70% { width: 75%; }
+    100% { width: 100%; }
+  }
+
+  /* ── SCROLLBAR ── */
+  .window-body::-webkit-scrollbar { width: 6px; }
+  .window-body::-webkit-scrollbar-track { background: transparent; }
+  .window-body::-webkit-scrollbar-thumb { background: rgba(44,24,16,0.15); border-radius: 3px; }
+  .window-body::-webkit-scrollbar-thumb:hover { background: rgba(44,24,16,0.3); }
+
+  /* ── RIGHT-CLICK MENU (future) ── */
+  .context-menu {
+    position: fixed;
+    background: white;
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: var(--shadow);
+    z-index: 99998;
+    min-width: 180px;
+    display: none;
+  }
+  .context-menu.show { display: block; }
+  .cm-item {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--espresso);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cm-item:hover { background: rgba(199,91,57,0.08); }
+  .cm-divider { height: 1px; background: rgba(44,24,16,0.08); margin: 4px 8px; }
+</style>
+</head>
+<body>
+
+<!-- STARTUP / BOOT SCREEN -->
+<div class="startup-overlay" id="startupOverlay">
+  <div class="startup-logo">🫡</div>
+  <div class="startup-title">Sarge Says</div>
+  <div class="startup-subtitle">on Social Media</div>
+  <div class="startup-bar-track">
+    <div class="startup-bar-fill"></div>
+  </div>
+</div>
+
+<!-- DESKTOP -->
+<div class="desktop" id="desktop">
+  <div class="desktop-watermark">
+    <h1>SARGE SAYS</h1>
+    <p>on Social Media</p>
+  </div>
+
+  <!-- Desktop Icons -->
+  <div class="desktop-icons">
+    <div class="desktop-icon" ondblclick="openApp('scout')">
+      <div class="icon-img icon-scout">🔍</div>
+      <div class="icon-label">Scout</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openApp('writer')">
+      <div class="icon-img icon-writer">✍️</div>
+      <div class="icon-label">Writer</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openApp('creator')">
+      <div class="icon-img icon-creator">📅</div>
+      <div class="icon-label">Creator</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openApp('scripts')">
+      <div class="icon-img icon-scripts">🎬</div>
+      <div class="icon-label">Scripts</div>
+    </div>
+    <div class="desktop-icon" ondblclick="openApp('analytics')">
+      <div class="icon-img icon-analytics">📊</div>
+      <div class="icon-label">Analytics</div>
+    </div>
+  </div>
+
+  <!-- ════════ SCOUT WINDOW ════════ -->
+  <div class="window" id="win-scout" style="width:680px;height:520px;top:40px;left:140px;">
+    <div class="window-header" onmousedown="startDrag(event, 'win-scout')">
+      <div class="window-dots">
+        <div class="window-dot dot-close" onclick="closeApp('scout')"></div>
+        <div class="window-dot dot-minimize" onclick="minimizeApp('scout')"></div>
+        <div class="window-dot dot-maximize" onclick="maximizeApp('scout')"></div>
+      </div>
+      <div class="window-title">Scout &mdash; Find Your People</div>
+    </div>
+    <div class="window-body">
+      <div class="app-hero scout-hero">
+        <h2>🔍 Scout</h2>
+        <p>Find women talking about weight loss, fitness struggles, and starting over. Show up. Be helpful. Let Sarge do the rest.</p>
+      </div>
+
+      <div class="section-title">🎯 Quick Search by Platform</div>
+      <div class="search-grid">
+        <div class="platform-card pc-reddit card" onclick="openSearch('reddit')">
+          <div class="platform-icon">🟠</div>
+          <div class="platform-name">Reddit</div>
+          <div class="platform-desc">r/loseit, r/fitness, r/xxfitness</div>
+        </div>
+        <div class="platform-card pc-tiktok card" onclick="openSearch('tiktok')">
+          <div class="platform-icon">🎵</div>
+          <div class="platform-name">TikTok</div>
+          <div class="platform-desc">Comments on weight loss videos</div>
+        </div>
+        <div class="platform-card pc-twitter card" onclick="openSearch('twitter')">
+          <div class="platform-icon">𝕏</div>
+          <div class="platform-name">X / Twitter</div>
+          <div class="platform-desc">Real-time fitness conversations</div>
+        </div>
+        <div class="platform-card pc-facebook card" onclick="openSearch('facebook')">
+          <div class="platform-icon">📘</div>
+          <div class="platform-name">Facebook</div>
+          <div class="platform-desc">Weight loss groups (40+)</div>
+        </div>
+        <div class="platform-card pc-instagram card" onclick="openSearch('instagram')">
+          <div class="platform-icon">📸</div>
+          <div class="platform-name">Instagram</div>
+          <div class="platform-desc">Hashtag discovery + DMs</div>
+        </div>
+        <div class="platform-card pc-youtube card" onclick="openSearch('youtube')">
+          <div class="platform-icon">▶️</div>
+          <div class="platform-name">YouTube</div>
+          <div class="platform-desc">Comment on weight loss vlogs</div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="section-title">🔥 Hot Search Terms</div>
+        <div class="search-terms">
+          <span class="search-term" onclick="copyText(this.textContent)">"can\'t stick to a diet"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"starting over again"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"weight loss over 40"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"fell off the wagon"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"calorie counting burnout"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"tired of dieting"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"accountability partner"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"perimenopause weight gain"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"protein for women"</span>
+          <span class="search-term" onclick="copyText(this.textContent)">"simple meal tracking"</span>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="section-title">📋 Daily Scout Checklist</div>
+        <div id="scoutChecklist">
+          <label class="card" style="display:flex;gap:10px;align-items:center;cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage);">
+            <span style="font-size:14px;color:var(--espresso);">Search 2 Reddit threads and leave helpful replies</span>
+          </label>
+          <label class="card" style="display:flex;gap:10px;align-items:center;cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage);">
+            <span style="font-size:14px;color:var(--espresso);">Comment on 3 TikTok videos in our niche</span>
+          </label>
+          <label class="card" style="display:flex;gap:10px;align-items:center;cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage);">
+            <span style="font-size:14px;color:var(--espresso);">Reply to 2 tweets about fitness struggles</span>
+          </label>
+          <label class="card" style="display:flex;gap:10px;align-items:center;cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage);">
+            <span style="font-size:14px;color:var(--espresso);">Engage in 1 Facebook group discussion</span>
+          </label>
+          <label class="card" style="display:flex;gap:10px;align-items:center;cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--sage);">
+            <span style="font-size:14px;color:var(--espresso);">Save 3 posts to reply to tomorrow (backlog)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ WRITER WINDOW ════════ -->
+  <div class="window" id="win-writer" style="width:660px;height:540px;top:60px;left:180px;">
+    <div class="window-header" onmousedown="startDrag(event, 'win-writer')">
+      <div class="window-dots">
+        <div class="window-dot dot-close" onclick="closeApp('writer')"></div>
+        <div class="window-dot dot-minimize" onclick="minimizeApp('writer')"></div>
+        <div class="window-dot dot-maximize" onclick="maximizeApp('writer')"></div>
+      </div>
+      <div class="window-title">Writer &mdash; Sarge's Voice</div>
+    </div>
+    <div class="window-body">
+      <div class="app-hero writer-hero">
+        <h2>✍️ Writer</h2>
+        <p>Craft replies and comments in Sarge's voice. Helpful first, product second. Always warm, always real.</p>
+      </div>
+
+      <div class="section-title">💬 Compose a Reply</div>
+      <div class="compose-area">
+        <textarea id="composeText" placeholder="Write your reply in Sarge's voice... Remember: helpful first, never salesy. Sound like you've been there." oninput="updateCharCount()"></textarea>
+        <div class="compose-toolbar">
+          <button class="btn btn-sm btn-primary" onclick="copyText(document.getElementById('composeText').value)">📋 Copy</button>
+          <button class="btn btn-sm btn-outline" onclick="document.getElementById('composeText').value='';updateCharCount()">Clear</button>
+          <span class="char-count" id="charCount">0 / 280</span>
+        </div>
+      </div>
+
+      <div class="section-title">📝 Reply Templates</div>
+      <div class="template-grid">
+        <div class="card template-card">
+          <div class="t-emoji">💪</div>
+          <div class="t-content">
+            <div class="t-name">The Empathy Open</div>
+            <div class="t-preview">I hear you. I was exactly where you are — starting over for the hundredth time and wondering if this time would be any different...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(0)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">🎯</div>
+          <div class="t-content">
+            <div class="t-name">The Three Things</div>
+            <div class="t-preview">Can I share something that changed everything for me? I stopped trying to be perfect. Now I just hold three things: protein, water, movement...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(1)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">🔥</div>
+          <div class="t-content">
+            <div class="t-name">The Reframe</div>
+            <div class="t-preview">You didn't fail. Your plan failed. There's a massive difference. If your system needs a perfect day to work, it was never going to last...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(2)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">🤝</div>
+          <div class="t-content">
+            <div class="t-name">The Soft CTA</div>
+            <div class="t-preview">If you want, I've been using an app that makes this stupid simple. You just photograph your plate and it does the macro math. No calorie obsessing...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(3)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">🌅</div>
+          <div class="t-content">
+            <div class="t-name">The Morning Check-in</div>
+            <div class="t-preview">Day [X] of holding the standard. Three things: protein, water, movement. That's it. No perfect days required. Who's holding it with me today?</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(4)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">📸</div>
+          <div class="t-content">
+            <div class="t-name">The App Demo Reply</div>
+            <div class="t-preview">Ok I have to share this because it literally changed my tracking game. I photograph my plate, the AI reads my macros, I adjust if needed. Done in 10 seconds...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(5)">Use</button>
+          </div>
+        </div>
+        <div class="card template-card">
+          <div class="t-emoji">❤️</div>
+          <div class="t-content">
+            <div class="t-name">The Validation</div>
+            <div class="t-preview">Hey — the fact that you're here asking this question means you haven't given up. That matters more than you think. Most people quit quietly...</div>
+          </div>
+          <div class="t-actions">
+            <button class="btn btn-sm btn-outline" onclick="useTemplate(6)">Use</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="section-title">⚡ Sarge Voice Rules</div>
+        <div class="card" style="font-size:13px;line-height:1.7;color:#555;">
+          <strong style="color:var(--terracotta);">DO:</strong> Lead with empathy. Share personal experience. Offer one specific tip. Mention the app only if it naturally fits.<br>
+          <strong style="color:var(--terracotta);">DON'T:</strong> Sound like a sales pitch. Use "soldier" or military bro language. Shame anyone. Promise specific results.<br>
+          <strong style="color:var(--terracotta);">TONE:</strong> Like a friend who's been there, got through it, and is reaching back to help you up. Direct but warm. "You can do this. I believe that."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CREATOR WINDOW ════════ -->
+  <div class="window" id="win-creator" style="width:700px;height:520px;top:50px;left:160px;">
+    <div class="window-header" onmousedown="startDrag(event, 'win-creator')">
+      <div class="window-dots">
+        <div class="window-dot dot-close" onclick="closeApp('creator')"></div>
+        <div class="window-dot dot-minimize" onclick="minimizeApp('creator')"></div>
+        <div class="window-dot dot-maximize" onclick="maximizeApp('creator')"></div>
+      </div>
+      <div class="window-title">Creator &mdash; Content Calendar</div>
+    </div>
+    <div class="window-body">
+      <div class="app-hero creator-hero">
+        <h2>📅 Creator</h2>
+        <p>Plan your content week. Four pillars, seven days. Consistency beats virality.</p>
+      </div>
+
+      <div class="pillar-legend">
+        <div class="pillar-item"><div class="pillar-dot" style="background:var(--terracotta)"></div> Hook / Viral</div>
+        <div class="pillar-item"><div class="pillar-dot" style="background:var(--sage)"></div> Educational</div>
+        <div class="pillar-item"><div class="pillar-dot" style="background:var(--amber)"></div> Story / Personal</div>
+        <div class="pillar-item"><div class="pillar-dot" style="background:var(--mauve)"></div> App Demo</div>
+      </div>
+
+      <div class="section-title">📆 This Week</div>
+      <div class="content-calendar" id="contentCalendar"></div>
+
+      <div class="section-title">🎯 Weekly Content Plan</div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-terra">Mon</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Hook video — "Unpopular opinion: You don't need motivation"</span>
+          <span class="tag tag-terra">Hook</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-sage">Tue</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Edu — "The protein math most women get wrong"</span>
+          <span class="tag tag-sage">Edu</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-amber">Wed</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Story — "Why I quit MyFitnessPal"</span>
+          <span class="tag tag-amber">Story</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-mauve">Thu</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Demo — "Watch me track my meal in 10 seconds"</span>
+          <span class="tag tag-mauve">Demo</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-terra">Fri</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Hook — "Day 1 is not starting over"</span>
+          <span class="tag tag-terra">Hook</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-amber">Sat</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Story — "What I ate today (realistic, not aesthetic)"</span>
+          <span class="tag tag-amber">Story</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;">
+          <span class="tag tag-sage">Sun</span>
+          <span style="font-size:14px;color:var(--espresso);font-weight:500;">Edu — "The water math most people get wrong" + rest day inspo</span>
+          <span class="tag tag-sage">Edu</span>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="section-title">💡 Content Ideas Backlog</div>
+        <div class="form-group">
+          <textarea id="ideaInput" placeholder="Quick idea... (press Enter to add)" style="min-height:40px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addIdea();}"></textarea>
+        </div>
+        <div id="ideaList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SCRIPTS WINDOW ════════ -->
+  <div class="window" id="win-scripts" style="width:640px;height:500px;top:70px;left:200px;">
+    <div class="window-header" onmousedown="startDrag(event, 'win-scripts')">
+      <div class="window-dots">
+        <div class="window-dot dot-close" onclick="closeApp('scripts')"></div>
+        <div class="window-dot dot-minimize" onclick="minimizeApp('scripts')"></div>
+        <div class="window-dot dot-maximize" onclick="maximizeApp('scripts')"></div>
+      </div>
+      <div class="window-title">Scripts &mdash; TikTok Library</div>
+    </div>
+    <div class="window-body">
+      <div class="app-hero scripts-hero">
+        <h2>🎬 Scripts</h2>
+        <p>Your 10 ready-to-film TikTok scripts. Tap to expand, copy the full script, and go film.</p>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+        <button class="btn btn-sm btn-primary" onclick="filterLocalScripts('all')">All</button>
+        <button class="btn btn-sm btn-outline" onclick="filterLocalScripts('hook')">Hook / Viral</button>
+        <button class="btn btn-sm btn-outline" onclick="filterLocalScripts('edu')">Educational</button>
+        <button class="btn btn-sm btn-outline" onclick="filterLocalScripts('story')">Story</button>
+        <button class="btn btn-sm btn-outline" onclick="filterLocalScripts('demo')">App Demo</button>
+      </div>
+
+      <div id="scriptsContainer"></div>
+    </div>
+  </div>
+
+  <!-- ════════ ANALYTICS WINDOW ════════ -->
+  <div class="window" id="win-analytics" style="width:660px;height:500px;top:45px;left:150px;">
+    <div class="window-header" onmousedown="startDrag(event, 'win-analytics')">
+      <div class="window-dots">
+        <div class="window-dot dot-close" onclick="closeApp('analytics')"></div>
+        <div class="window-dot dot-minimize" onclick="minimizeApp('analytics')"></div>
+        <div class="window-dot dot-maximize" onclick="maximizeApp('analytics')"></div>
+      </div>
+      <div class="window-title">Analytics &mdash; Track Progress</div>
+    </div>
+    <div class="window-body">
+      <div class="app-hero" style="background:linear-gradient(135deg,rgba(74,144,217,0.12),rgba(74,144,217,0.04));color:var(--espresso);">
+        <h2>📊 Analytics</h2>
+        <p>Track your social media growth. Log daily, see weekly trends, stay consistent.</p>
+      </div>
+
+      <div class="section-title">📈 Quick Log</div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Platform</label>
+            <select id="logPlatform">
+              <option>TikTok</option>
+              <option>Instagram</option>
+              <option>Reddit</option>
+              <option>X / Twitter</option>
+              <option>Facebook</option>
+              <option>YouTube</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Action</label>
+            <select id="logAction">
+              <option>Posted content</option>
+              <option>Replied / commented</option>
+              <option>DM'd someone</option>
+              <option>Engaged in group</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Count</label>
+            <input type="text" id="logCount" value="1" style="text-align:center;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (optional)</label>
+          <input type="text" id="logNotes" placeholder="e.g., Great engagement on the protein video">
+        </div>
+        <button class="btn btn-primary" onclick="logActivity()" style="width:100%;">Log Activity</button>
+      </div>
+
+      <div class="section-title" style="margin-top:24px;">📋 Activity Log</div>
+      <div id="activityLog"></div>
+
+      <div class="section-title" style="margin-top:24px;">🏆 Weekly Scorecard</div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+          <div>
+            <div style="font-size:28px;font-weight:700;color:var(--terracotta);" id="statPosts">0</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Posts</div>
+          </div>
+          <div>
+            <div style="font-size:28px;font-weight:700;color:var(--sage);" id="statReplies">0</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Replies</div>
+          </div>
+          <div>
+            <div style="font-size:28px;font-weight:700;color:var(--amber);" id="statDMs">0</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">DMs</div>
+          </div>
+          <div>
+            <div style="font-size:28px;font-weight:700;color:var(--mauve);" id="statGroups">0</div>
+            <div style="font-size:11px;color:#888;margin-top:4px;">Groups</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKBAR / DOCK -->
+<div class="taskbar">
+  <div class="taskbar-brand">
+    <div class="sarge-icon">🫡</div>
+    <span>Sarge Says</span>
+  </div>
+  <div class="taskbar-apps" id="taskbarApps">
+    <div class="taskbar-app" id="tb-scout" onclick="openApp('scout')">
+      <div class="ta-icon icon-scout">🔍</div>
+      <span class="ta-label">Scout</span>
+    </div>
+    <div class="taskbar-app" id="tb-writer" onclick="openApp('writer')">
+      <div class="ta-icon icon-writer">✍️</div>
+      <span class="ta-label">Writer</span>
+    </div>
+    <div class="taskbar-app" id="tb-creator" onclick="openApp('creator')">
+      <div class="ta-icon icon-creator">📅</div>
+      <span class="ta-label">Creator</span>
+    </div>
+    <div class="taskbar-app" id="tb-scripts" onclick="openApp('scripts')">
+      <div class="ta-icon icon-scripts">🎬</div>
+      <span class="ta-label">Scripts</span>
+    </div>
+    <div class="taskbar-app" id="tb-analytics" onclick="openApp('analytics')">
+      <div class="ta-icon icon-analytics">📊</div>
+      <span class="ta-label">Analytics</span>
+    </div>
+  </div>
+  <div class="taskbar-clock" id="taskbarClock"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+const apps = ['scout','writer','creator','scripts','analytics'];
+let openApps = new Set();
+let zCounter = 100;
+let dragState = null;
+
+// ── BOOT SEQUENCE ──
+setTimeout(() => {
+  document.getElementById('startupOverlay').classList.add('fade-out');
+  setTimeout(() => document.getElementById('startupOverlay').style.display = 'none', 600);
+}, 2400);
+
+// ── WINDOW MANAGEMENT ──
+function openApp(id) {
+  const win = document.getElementById('win-' + id);
+  win.classList.add('open');
+  win.style.zIndex = ++zCounter;
+  openApps.add(id);
+  document.getElementById('tb-' + id).classList.add('active');
+}
+
+function closeApp(id) {
+  const win = document.getElementById('win-' + id);
+  win.classList.remove('open', 'maximized');
+  openApps.delete(id);
+  document.getElementById('tb-' + id).classList.remove('active');
+}
+
+function minimizeApp(id) {
+  closeApp(id);
+}
+
+function maximizeApp(id) {
+  const win = document.getElementById('win-' + id);
+  win.classList.toggle('maximized');
+}
+
+function bringToFront(id) {
+  document.getElementById('win-' + id).style.zIndex = ++zCounter;
+}
+
+// Click anywhere on a window to bring it forward
+apps.forEach(id => {
+  document.getElementById('win-' + id).addEventListener('mousedown', () => bringToFront(id));
+});
+
+// ── DRAGGING ──
+function startDrag(e, winId) {
+  if (e.target.classList.contains('window-dot')) return;
+  const win = document.getElementById(winId);
+  if (win.classList.contains('maximized')) return;
+  bringToFront(winId.replace('win-',''));
+  const rect = win.getBoundingClientRect();
+  dragState = { win, offsetX: e.clientX - rect.left, offsetY: e.clientY - rect.top };
+  e.preventDefault();
+}
+
+document.addEventListener('mousemove', e => {
+  if (!dragState) return;
+  const x = e.clientX - dragState.offsetX;
+  const y = e.clientY - dragState.offsetY;
+  dragState.win.style.left = x + 'px';
+  dragState.win.style.top = y + 'px';
+});
+
+document.addEventListener('mouseup', () => { dragState = null; });
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const date = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  document.getElementById('taskbarClock').innerHTML = `<span>${time}</span><span style="font-size:11px;opacity:0.6;">${date}</span>`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── COPY ──
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!'));
+}
+
+// ── CHAR COUNT ──
+function updateCharCount() {
+  const len = document.getElementById('composeText').value.length;
+  const el = document.getElementById('charCount');
+  el.textContent = len + ' / 280';
+  el.style.color = len > 280 ? 'var(--terracotta)' : '#999';
+}
+
+// ── TEMPLATES ──
+const templates = [
+  `I hear you. I was exactly where you are — starting over for the hundredth time and wondering if this time would be any different. Here's what actually changed for me: I stopped trying to overhaul everything. I picked three things. Protein. Water. Movement. That's it. Not a perfect diet. Not a gym membership I'd ghost in two weeks. Just three things I could hold on my worst day. It changed everything.`,
+  `Can I share something that changed everything for me? I stopped trying to be perfect and started just holding three things every day: hit my protein, drink my water, move my body. That's it. No meal prep Sundays. No 5am alarm clock. Just three things, held consistently. It's been [X] days and I genuinely feel different. Not because the plan is magic — because it's simple enough that I actually stick to it.`,
+  `You didn't fail. Your plan failed. There's a massive difference. If your system needs a perfect day to work — if one missed meal prep throws the whole week off — that's not a discipline problem. That's a design problem. What if you had a standard so simple you could hold it on a sick day, a travel day, an "I ate pizza for lunch" day? Three things. That's all. Protein, water, movement. You can hold that.`,
+  `If you want, I've been using an app that makes this stupid simple. You just photograph your plate and it tells you the macros. No scanning barcodes, no weighing chicken on a kitchen scale. Ten seconds. I actually stick with tracking now because it's not a part-time job. It's called Hold the Standard — it has this tough-love coach named Sarge who's honestly hilarious but also keeps you accountable. Game changer for me.`,
+  `Day {X} of holding the standard. Three things: protein, water, movement. That's it. No perfect days required. Just showing up and holding it again. Who's holding it with me today? Drop a 🫡 if you're in.`,
+  `Ok I have to share this because it literally changed my tracking game. Instead of scanning barcodes or typing ingredients, I just photograph my plate. The AI reads what's there, estimates the macros, and I adjust the portion if it's off. Done in 10 seconds. The app is called Hold the Standard — the AI tracking is honestly the thing that made me finally stick with it. No more "I'll log it later" that turns into never.`,
+  `Hey — the fact that you're here asking this question means you haven't given up. That matters more than you think. Most people quit quietly. You're still showing up. That's not nothing — that's everything. You don't need a perfect plan. You need a standard you can hold today. Just today. Tomorrow you hold it again. That's literally the whole game.`
+];
+
+function useTemplate(idx) {
+  document.getElementById('composeText').value = templates[idx];
+  updateCharCount();
+  showToast('✍️ Template loaded');
+}
+
+// ── SCOUT: SEARCH LINKS ──
+const searchUrls = {
+  reddit: 'https://www.reddit.com/search/?q=weight+loss+over+40+starting+over&type=comment&sort=new',
+  tiktok: 'https://www.tiktok.com/search?q=weight%20loss%20over%2040%20starting%20over',
+  twitter: 'https://twitter.com/search?q=%22weight+loss%22+%22over+40%22+%22starting+over%22&f=live',
+  facebook: 'https://www.facebook.com/search/groups/?q=women%20over%2040%20weight%20loss',
+  instagram: 'https://www.instagram.com/explore/tags/weightlossover40/',
+  youtube: 'https://www.youtube.com/results?search_query=weight+loss+over+40+starting+over&sp=CAI%253D'
+};
+
+function openSearch(platform) {
+  window.open(searchUrls[platform], '_blank');
+  showToast('🔍 Opening ' + platform.charAt(0).toUpperCase() + platform.slice(1));
+}
+
+// ── SCRIPTS DATA ──
+const scriptsData = [
+  { num: 1, title: 'Three things. That\'s it.', type: 'hook', badge: 'Viral',
+    text: 'I lost 47 pounds.\nNot with a meal plan.\nNot with a personal trainer.\nNot with a $200/month supplement stack.\n\nThree things. Every day.\n\n1. Hit my protein (100g minimum)\n2. Drink my water (80oz)\n3. Move my body (30 min, anything counts)\n\nThat\'s the standard. Hold it.',
+    vo: '"I lost 47 pounds and I\'m going to tell you exactly how in the next 20 seconds. Ready? Three things. Every single day. Hit my protein — that\'s 100 grams minimum. Drink my water — 80 ounces. Move my body — 30 minutes, anything counts. No fancy meal plan. No $200 supplement stack. No 5am alarm I\'d snooze through. Three things. That\'s the standard. Hold it."',
+    notes: 'Quick cuts. Energetic. Numbers on screen as you say them. End card: "Follow @sargesaysapp for the playbook." 20-30 seconds.',
+    tags: '#weightloss #fatloss #fitnesstips #over40fitness #holdthestandard #sargesays #simplefitness #proteingoals #consistency #transformation' },
+  { num: 2, title: 'I quit MyFitnessPal. Here\'s why.', type: 'story', badge: 'Story',
+    text: 'I quit MyFitnessPal\nafter 6 years.\n\nNot because it\'s bad.\nBecause I needed something\nthat worked like my brain does.\n\nI don\'t want to scan barcodes.\nI don\'t want to weigh my chicken.\nI want to photograph my plate\nand move on with my life.\n\nSo I found an app that does exactly that.\nAI looks at your food.\nTells you the macros.\nYou adjust if needed.\nDone. 10 seconds.\n\nSix years of logging guilt: gone.',
+    vo: '"I used MyFitnessPal for six years. Six years of scanning barcodes, weighing chicken breast on a kitchen scale, and manually entering a 47-ingredient casserole one item at a time. I didn\'t quit because it\'s bad — I quit because I found something that works like my brain actually works. I photograph my plate. AI tells me the macros. I adjust the portion if it looks off. Save. Done. Ten seconds. I went from dreading logging to... not even thinking about it. Game changer."',
+    notes: 'Storytelling format — sit down, talk naturally. Show both apps briefly (no shade, just preference). The "six years of logging guilt: gone" line is your clip moment. 45-60 seconds.',
+    tags: '#myfitnesspal #caloriecounting #macrotracking #foodlog #appreview #holdthestandard #sargesays #fitnesstips #aitech #over40' },
+  { num: 3, title: 'The protein secret nobody tells women over 40', type: 'edu', badge: 'Edu',
+    text: 'Women over 40 need MORE protein.\nNot less. More.\n\nYour body is losing muscle mass.\nEvery. Single. Year.\nAfter 40, it accelerates.\n\nThe fix? 100g+ protein daily.\n\nMost women I talk to are getting 40-60g.\nThat\'s not even close.\n\nSources that hit different:\n• Greek yogurt (15-20g per cup)\n• Chicken thigh (28g per thigh)\n• Eggs (6g each — eat the yolk)\n• Protein shake (25-30g, 2 min)\n• Cottage cheese (14g per half cup)',
+    vo: '"If you\'re a woman over 40, I need you to hear this. You need more protein. Not less. More. Your body is actively losing muscle mass — it\'s called sarcopenia, and after 40, it speeds up. The fix is simple: 100 grams of protein. Every day. Most women I talk to are getting 40, maybe 60 grams. That\'s not even close. Here\'s what hits: Greek yogurt, chicken thighs, eggs — eat the yolk — a protein shake when you\'re behind, cottage cheese. This isn\'t bodybuilder advice. This is keep-your-body-strong advice."',
+    notes: 'Talking head, direct to camera. Use text overlays to emphasize the numbers. Educational/authoritative tone. High bookmark potential. 30-45 seconds.',
+    tags: '#proteinforwomen #over40fitness #weightlossover40 #proteintips #macros #womenshealth #sargesays #fitover40 #perimenopause #holdthestandard' },
+  { num: 4, title: 'You don\'t need motivation', type: 'hook', badge: 'Viral',
+    text: 'Unpopular opinion:\n\nYou don\'t need motivation.\n\nYou need a standard\nlow enough to hold on your worst day\nand high enough to change your life\nwhen you hold it for a year.\n\nThree things. Every day.\nThat\'s the standard.\n\nHold it.',
+    vo: '"Stop waiting to feel motivated. Motivation is a liar — she shows up on Monday and ghosts you by Wednesday. What you need is a standard. Something small enough that you can hold it on your worst day. But powerful enough that if you hold it for a year, you won\'t recognize yourself. Three things. Protein. Water. Movement. That\'s the standard. Hold it."',
+    notes: 'Powerful hook — "Unpopular opinion" always drives engagement. Film with intensity, direct eye contact. The "motivation is a liar" line is quotable — it\'ll get stitched. 20-30 seconds.',
+    tags: '#unpopularopinion #motivation #disciplineovermotivation #holdthestandard #sargesays #fitnessmindset #over40 #weightloss #consistency #mindset' },
+  { num: 5, title: 'Watch me track my meal in 10 seconds', type: 'demo', badge: 'Demo',
+    text: 'How I track my meals now:\n\nStep 1: Photograph my plate\nStep 2: AI estimates my macros\nStep 3: I adjust the portion if needed\nStep 4: Save\n\nNo barcode scanning.\nNo weighing food.\nNo 47-ingredient recipes.\n\n10 seconds. Done.',
+    vo: '"This is how I track my meals now. I take a photo of my plate. The AI tells me what it sees and estimates my macros. If the portion looks off, I slide it up or down. Save. That\'s it. No barcode scanning. No weighing my chicken on a kitchen scale. Ten seconds. I\'m done. And I actually stick with it — because it\'s not a part-time job."',
+    notes: 'SCREEN RECORDING of the actual app flow. Film your real lunch plate, open the app, photograph it, show the AI result, adjust portion, save. Add a timer overlay. This is your product demo. 30-45 seconds.',
+    tags: '#calorietracking #mealtracking #foodlog #aitechnology #fitnesstips #holdthestandard #sargesays #easytracking #macrocounting #fooddiary' },
+  { num: 6, title: 'Why you keep falling off', type: 'story', badge: 'Viral',
+    text: 'You don\'t keep falling off\nbecause you lack discipline.\n\nYou keep falling off because\nyour plan requires a PERFECT day\nto work.\n\nMiss one meal prep Sunday?\nWhole week collapses.\n\nEat something "bad"?\nWell, day\'s ruined, might as well...\n\nThe fix:\nA standard so simple\nyou can hold it on a BAD day.\n\nThree things. That\'s all.',
+    vo: '"I need you to hear something. You don\'t keep falling off because you lack discipline. You keep falling off because your plan requires a perfect day to work. Miss one meal prep? The whole week falls apart. Eat something off-plan? Well, the day\'s ruined, might as well start over Monday. That\'s not a you problem. That\'s a system problem. The fix is a standard so simple you can hold it on a bad day. Three things. Protein, water, movement. Hold the standard."',
+    notes: 'This one HITS. Expect high shares. Talk to camera, conversational. The "might as well start over Monday" line will resonate hard. 45-60 seconds.',
+    tags: '#fallingoff #dietfails #startingover #mondaymotivation #holdthestandard #sargesays #weightlossstruggle #over40 #consistency #reallife' },
+  { num: 7, title: 'The water math most people get wrong', type: 'edu', badge: 'Edu',
+    text: '"Drink 8 glasses of water a day"\n\nThat\'s not even a real number.\n\nHere\'s the real math:\nYour bodyweight in lbs ÷ 2 = oz per day\n\n160 lbs? Drink 80 oz.\n200 lbs? Drink 100 oz.\n\nMost of you are getting HALF that.\n\nDrink up. You\'re worth the upkeep.',
+    vo: '"Eight glasses of water a day. That\'s what they told us, right? That\'s not even a real number. Here\'s the actual math. Take your body weight in pounds, divide by two. That\'s how many ounces you need. If you\'re 160, that\'s 80 ounces. If you\'re 200, that\'s 100. Most women are getting half of that. Drink up. You\'re worth the upkeep."',
+    notes: 'Use text overlays with the math. Hold up a water bottle for scale. High save/bookmark potential. 30-40 seconds.',
+    tags: '#waterintake #hydration #drinkmorewater #healthtips #over40 #holdthestandard #sargesays #waterchallenge #weightlosstips #womenshealth' },
+  { num: 8, title: 'Day 1 is not starting over', type: 'hook', badge: 'Viral',
+    text: 'Day 1 is not "starting over."\n\nDay 1 is "I showed up again."\n\nYou didn\'t lose your progress\nbecause you missed a few days.\n\nYou lost it because you convinced\nyourself you had to start from zero.\n\nYou don\'t.\n\nThe standard didn\'t move.\nYou just stepped away from it.\n\nStep back.\nIt\'s right where you left it.',
+    vo: '"Can we stop calling it \'starting over\'? You\'re not starting over. You\'re showing up again. And there\'s a big difference. You didn\'t lose your progress because you missed a few days. You lost it because you convinced yourself you had to start from zero. You don\'t. The standard didn\'t move. You just stepped away from it for a minute. Step back. It\'s right where you left it. Let\'s go."',
+    notes: 'Highest potential viral video. The reframe from "starting over" to "showing up again" will resonate massively. Film with emotion. 30-40 seconds.',
+    tags: '#day1 #startingover #motivation #nevergiveup #holdthestandard #sargesays #weightlossjourney #keepgoing #over40fitness #youvegotthis' },
+  { num: 9, title: 'What I ate today (realistic, not aesthetic)', type: 'story', badge: 'Story',
+    text: 'What I ate today\n(realistic, not aesthetic)\n\nBreakfast: Greek yogurt + berries + granola\n(28g protein before 9am)\n\nLunch: Leftover chicken + rice + broccoli\n(AI said 42g protein. Adjusted portion down slightly.)\n\nSnack: Protein shake because I was behind\n(30g protein in 2 minutes)\n\nDinner: Tacos. Real tacos. With cheese.\n(Sarge doesn\'t do deprivation.)\n\nTotal protein: 127g. Standard held.',
+    vo: '"Here\'s what I actually ate today. Not the aesthetic version — the real one. Greek yogurt and berries for breakfast — 28 grams of protein before nine. Leftover chicken and rice for lunch, I just photographed the plate and the app told me the macros. Had a protein shake in the afternoon because I was behind on my number. And dinner? Tacos. Real tacos. With cheese. Because this isn\'t about deprivation. It\'s about hitting your standard. 127 grams of protein today. Standard held."',
+    notes: 'Film each meal as you eat it throughout the day. Show actual plates — messy, real. The "real tacos with cheese" line humanizes the brand. INFINITELY repeatable — do one every week. 45-60 seconds.',
+    tags: '#whatieatinaday #realisticmeals #proteingoals #over40 #holdthestandard #sargesays #mealideas #norestrictivedieting #intuitiveeating #macros' },
+  { num: 10, title: '30 days from now', type: 'hook', badge: 'Viral',
+    text: '30 days from now,\nyou can be 30 days into it\nor 30 days into wishing you\'d started.\n\nThe women who change?\nThey don\'t wait for perfect.\nThey don\'t wait for Monday.\nThey don\'t wait for motivation.\n\nThey set a standard.\nThey hold it today.\nThen they hold it again tomorrow.\n\nThat\'s the whole secret.\n\nYour move.',
+    vo: '"Thirty days from now, you can be thirty days into it — or thirty days further into wishing you\'d started. The women who actually change their lives? They don\'t wait for the perfect moment. They don\'t wait for Monday. They don\'t wait to feel motivated. They set a standard. They hold it today. And then they hold it again tomorrow. That\'s the whole secret. Nobody\'s coming to do this for you. But you\'ve got everything you need. Your move."',
+    notes: 'Close-up, direct to camera. Speak slowly and deliberately. This is your "call to action" video — the one that converts followers into app downloads. End with a 3-second pause on "Your move." 30-40 seconds.',
+    tags: '#30daychallenge #startnow #nomoreexcuses #holdthestandard #sargesays #weightlossjourney #over40fitness #yourmove #discipline #transformation' }
+];
+
+function renderScripts(filter) {
+  const c = document.getElementById('scriptsContainer');
+  const filtered = filter === 'all' ? scriptsData : scriptsData.filter(s => s.type === filter);
+  c.innerHTML = filtered.map(s => {
+    const badgeClass = s.badge === 'Viral' ? 'tag-terra' : s.badge === 'Edu' ? 'tag-sage' : s.badge === 'Story' ? 'tag-amber' : 'tag-mauve';
+    return `
+    <div class="card" style="cursor:pointer;" onclick="this.querySelector('.script-detail').style.display = this.querySelector('.script-detail').style.display === 'none' ? 'block' : 'none'">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:20px;font-weight:700;color:var(--terracotta);min-width:28px;">${s.num}</span>
+        <span style="flex:1;font-weight:600;font-size:14px;color:var(--espresso);">${s.title}</span>
+        <span class="tag ${badgeClass}">${s.badge}</span>
+      </div>
+      <div class="script-detail" style="display:none;margin-top:16px;border-top:1px solid rgba(44,24,16,0.06);padding-top:16px;">
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:600;color:var(--terracotta);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">On-Screen Text</div>
+          <div style="font-size:13px;line-height:1.6;color:var(--espresso);white-space:pre-line;background:rgba(250,245,239,0.5);padding:12px;border-radius:8px;">${s.text}</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:600;color:var(--terracotta);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Voiceover</div>
+          <div style="font-size:13px;line-height:1.6;color:#555;font-style:italic;padding:12px;background:rgba(250,245,239,0.5);border-radius:8px;">${s.vo}</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:600;color:var(--terracotta);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Production Notes</div>
+          <div style="font-size:12px;line-height:1.5;color:#777;padding:12px;background:rgba(250,245,239,0.5);border-radius:8px;">${s.notes}</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:#999;">${s.tags}</div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();copyScript(${s.num - 1})">📋 Copy Full Script</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyScript(idx) {
+  const s = scriptsData[idx];
+  const full = `ON-SCREEN TEXT:\n${s.text}\n\nVOICEOVER:\n${s.vo}\n\nPRODUCTION NOTES:\n${s.notes}\n\nHASHTAGS:\n${s.tags}`;
+  navigator.clipboard.writeText(full).then(() => showToast('📋 Script copied!'));
+}
+
+function filterLocalScripts(type) {
+  renderScripts(type);
+}
+
+renderScripts('all');
+
+// ── CREATOR: CALENDAR ──
+function renderCalendar() {
+  const cal = document.getElementById('contentCalendar');
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = days.map(d => `<div class="cal-header">${d}</div>`).join('');
+
+  const schedule = [null, 'hook', 'edu', 'story', 'demo', 'hook', 'story', 'edu'];
+  for (let w = 0; w < 4; w++) {
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + w * 7 + d);
+      const isToday = date.toDateString() === today.toDateString();
+      const type = d === 0 ? null : schedule[d];
+      const cls = type ? 'has-' + type : '';
+      html += `<div class="cal-day ${cls} ${isToday ? 'today' : ''}">
+        <span class="cal-num">${date.getDate()}</span>
+        ${type ? '<span class="cal-dot"></span>' : ''}
+      </div>`;
+    }
+  }
+  cal.innerHTML = html;
+}
+renderCalendar();
+
+// ── CREATOR: IDEAS ──
+let ideas = JSON.parse(localStorage.getItem('sarge_ideas') || '[]');
+function renderIdeas() {
+  document.getElementById('ideaList').innerHTML = ideas.map((idea, i) => `
+    <div class="card" style="display:flex;align-items:center;gap:10px;">
+      <span style="flex:1;font-size:13px;color:var(--espresso);">${idea}</span>
+      <button class="btn btn-sm btn-outline" onclick="ideas.splice(${i},1);localStorage.setItem('sarge_ideas',JSON.stringify(ideas));renderIdeas();">✕</button>
+    </div>
+  `).join('');
+}
+renderIdeas();
+
+function addIdea() {
+  const input = document.getElementById('ideaInput');
+  if (!input.value.trim()) return;
+  ideas.unshift(input.value.trim());
+  localStorage.setItem('sarge_ideas', JSON.stringify(ideas));
+  input.value = '';
+  renderIdeas();
+  showToast('💡 Idea saved!');
+}
+
+// ── ANALYTICS ──
+let activityLog = JSON.parse(localStorage.getItem('sarge_activity') || '[]');
+
+function logActivity() {
+  const entry = {
+    platform: document.getElementById('logPlatform').value,
+    action: document.getElementById('logAction').value,
+    count: parseInt(document.getElementById('logCount').value) || 1,
+    notes: document.getElementById('logNotes').value,
+    timestamp: new Date().toISOString()
+  };
+  activityLog.unshift(entry);
+  localStorage.setItem('sarge_activity', JSON.stringify(activityLog));
+  document.getElementById('logNotes').value = '';
+  renderActivityLog();
+  updateScorecard();
+  showToast('📊 Activity logged!');
+}
+
+function renderActivityLog() {
+  const el = document.getElementById('activityLog');
+  const recent = activityLog.slice(0, 15);
+  if (recent.length === 0) {
+    el.innerHTML = '<div class="card" style="text-align:center;color:#999;font-size:13px;">No activity logged yet. Start scouting!</div>';
+    return;
+  }
+  el.innerHTML = recent.map(e => {
+    const d = new Date(e.timestamp);
+    const time = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return `<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 16px;">
+      <span style="font-size:12px;color:#999;min-width:100px;">${time}</span>
+      <span class="tag tag-terra">${e.platform}</span>
+      <span style="flex:1;font-size:13px;color:var(--espresso);">${e.action} (×${e.count})${e.notes ? ' — ' + e.notes : ''}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateScorecard() {
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+  const thisWeek = activityLog.filter(e => new Date(e.timestamp) > weekAgo);
+  const posts = thisWeek.filter(e => e.action === 'Posted content').reduce((s, e) => s + e.count, 0);
+  const replies = thisWeek.filter(e => e.action === 'Replied / commented').reduce((s, e) => s + e.count, 0);
+  const dms = thisWeek.filter(e => e.action === "DM'd someone").reduce((s, e) => s + e.count, 0);
+  const groups = thisWeek.filter(e => e.action === 'Engaged in group').reduce((s, e) => s + e.count, 0);
+  document.getElementById('statPosts').textContent = posts;
+  document.getElementById('statReplies').textContent = replies;
+  document.getElementById('statDMs').textContent = dms;
+  document.getElementById('statGroups').textContent = groups;
+}
+
+renderActivityLog();
+updateScorecard();
+</script>
+</body>
+</html>
