@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hold the Standard — TikTok Scripts</title>
+<style>
+  :root {
+    --terra: #C75B39;
+    --cream: #FAF5EF;
+    --sage: #7A9E7E;
+    --espresso: #2C1810;
+    --amber: #D4A045;
+    --mauve: #6B4C6E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--cream);
+    color: var(--espresso);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--espresso), #4a2e1e);
+    padding: 20px 16px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .header .sub {
+    color: var(--amber);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .tip {
+    background: #fdf8f0;
+    border: 1px solid var(--amber);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--espresso);
+    margin: 12px;
+  }
+  .tip strong { color: var(--amber); }
+  .content { padding: 0 12px 12px; }
+  .script-card {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #e8e0d8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .script-header {
+    background: linear-gradient(135deg, var(--terra), #A84B2E);
+    color: white;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .script-header h3 {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .script-num {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .script-meta {
+    display: flex;
+    gap: 6px;
+    margin-left: 8px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .badge.viral { background: rgba(255,255,255,0.25); color: white; }
+  .badge.easy { background: rgba(122,158,126,0.3); color: white; }
+  .chevron {
+    font-size: 18px;
+    transition: transform 0.2s;
+    margin-left: 8px;
+  }
+  .chevron.open { transform: rotate(180deg); }
+  .script-body {
+    display: none;
+    padding: 14px;
+  }
+  .script-body.open { display: block; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--terra);
+    margin: 12px 0 6px;
+  }
+  .section-label:first-child { margin-top: 0; }
+  .script-text {
+    background: var(--cream);
+    border-left: 3px solid var(--terra);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--espresso);
+    position: relative;
+  }
+  .voiceover {
+    background: #f0e8f0;
+    border-left: 3px solid var(--mauve);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--espresso);
+    font-style: italic;
+  }
+  .production-note {
+    background: #e8f0e8;
+    border-left: 3px solid var(--sage);
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #555;
+  }
+  .copy-btn {
+    background: var(--terra);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .copy-btn.copied { background: var(--sage); }
+  .hashtags {
+    font-size: 12px;
+    color: var(--mauve);
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-pill {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid var(--terra);
+    color: var(--terra);
+    background: white;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .filter-pill.active {
+    background: var(--terra);
+    color: white;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>TikTok Script Vault</h1>
+  <div class="sub">@sargesaysapp content library</div>
+</div>
+
+<div class="tip">
+  <strong>Posting cadence:</strong> 2x/day. Morning (7-9am) + evening (7-9pm). Batch-film on weekends. Each script is self-contained — film with your phone, add captions in CapCut, post.
+</div>
+
+<div class="filter-bar">
+  <div class="filter-pill active" onclick="filterScripts('all')">All</div>
+  <div class="filter-pill" onclick="filterScripts('hook')">Hook/Viral</div>
+  <div class="filter-pill" onclick="filterScripts('edu')">Educational</div>
+  <div class="filter-pill" onclick="filterScripts('story')">Story</div>
+  <div class="filter-pill" onclick="filterScripts('demo')">App Demo</div>
+</div>
+
+<div class="content" id="scripts">
+
+<!-- SCRIPT 1 -->
+<div class="script-card" data-type="hook">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">1</div>
+    <h3>Three things. That's it.</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      Stop tracking 47 things.<br><br>
+      You need THREE.<br><br>
+      1. Protein<br>
+      2. Water<br>
+      3. Movement<br><br>
+      That's your standard for today.<br>
+      Not the whole week.<br>
+      Not a "plan."<br>
+      Just today.<br><br>
+      Win today. Tomorrow will handle itself.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Every woman I know who actually kept the weight off wasn't doing more. She was doing less — consistently. Three things. Protein, water, movement. That's the whole standard. You don't need a meal prep empire. You don't need a 5am gym ritual. You need to win today. That's it."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Film talking to camera, kitchen or living room background. Use text pop-ups for the 3 items. Trending audio optional — works great as a voiceover-only with lo-fi beat. 15-30 seconds. End card: "Follow for more from Sarge."
+    </div>
+    <div class="hashtags">
+      #weightlossover40 #caloriecounting #proteingoals #fitnessmotivation #holdthestandard #sargesays #simplefitness #womenshealth #over40fitness #consistency
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 2 -->
+<div class="script-card" data-type="story">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">2</div>
+    <h3>I quit MyFitnessPal</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      POV: You finally quit MyFitnessPal<br><br>
+      Because weighing every almond<br>
+      was not the life you signed up for.<br><br>
+      What I do instead:<br>
+      - Photograph my plate (AI does the math)<br>
+      - Hit my protein target<br>
+      - Drink my water<br>
+      - Move my body<br><br>
+      Three standards. Held daily.<br>
+      That's the whole system.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "I spent two years on MyFitnessPal. You know what I got? Anxiety about almonds and a barcode scanner addiction. I was spending more time LOGGING than LIVING. Then I realized — I only needed three things. Protein, water, movement. I photograph my plate, the AI estimates my macros, I adjust if it's off. Done. No scanning. No weighing. Just three standards, held daily."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Great for the "POV:" format. Film yourself dramatically deleting MFP (or pretending to). Then switch to calm, confident energy showing the simpler approach. Use a trending sound for the first 3 seconds, then voiceover. 30-45 seconds. High comment potential — everyone has MFP opinions.
+    </div>
+    <div class="hashtags">
+      #myfitnesspal #calorietracker #dietculture #foodfreedom #simplefitness #holdthestandard #sargesays #over40 #weightlossjourney #macros
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 3 -->
+<div class="script-card" data-type="edu">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">3</div>
+    <h3>The protein secret nobody tells women over 40</h3>
+    <div class="script-meta"><span class="badge easy">Easy</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      The #1 thing women over 40 get wrong:<br><br>
+      You're not eating enough protein.<br><br>
+      Not even close.<br><br>
+      You need 100g+ per day.<br>
+      Most women get 40-60g.<br><br>
+      This is why you're:<br>
+      - Always hungry<br>
+      - Losing muscle, not fat<br>
+      - Hitting plateaus<br><br>
+      Fix your protein. Everything else follows.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "If you're a woman over 40 and you're frustrated with your progress, I need you to hear this. You are almost certainly not eating enough protein. Not even close. The average woman gets 40 to 60 grams a day. You need at least 100. This is the single biggest lever for body composition after 40. It keeps you full, it preserves your muscle, it breaks plateaus. Fix your protein first. Everything else follows."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Talking head, direct to camera. Use text overlays to emphasize the numbers (100g, 40-60g). Educational/authoritative tone. This is a "save and share" video — high bookmark potential. 30-45 seconds. Can reshoot this same concept 5 different ways — it always performs.
+    </div>
+    <div class="hashtags">
+      #proteinforwomen #over40fitness #weightlossover40 #proteintips #macros #womenshealth #sargesays #fitover40 #perimenopause #holdthestandard
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 4 -->
+<div class="script-card" data-type="hook">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">4</div>
+    <h3>You don't need motivation</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      Unpopular opinion:<br><br>
+      You don't need motivation.<br><br>
+      You need a standard<br>
+      low enough to hold on your worst day<br>
+      and high enough to change your life<br>
+      when you hold it for a year.<br><br>
+      Three things. Every day.<br>
+      That's the standard.<br><br>
+      Hold it.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Stop waiting to feel motivated. Motivation is a liar — she shows up on Monday and ghosts you by Wednesday. What you need is a standard. Something small enough that you can hold it on your worst day. But powerful enough that if you hold it for a year, you won't recognize yourself. Three things. Protein. Water. Movement. That's the standard. Hold it."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Powerful hook — "Unpopular opinion" always drives engagement. Film with intensity, direct eye contact. Pause after "Hold it." for impact. Works as a green screen over gym footage or just straight to camera. 20-30 seconds. The "motivation is a liar — she shows up Monday and ghosts you by Wednesday" line is quotable — it'll get stitched.
+    </div>
+    <div class="hashtags">
+      #unpopularopinion #motivation #disciplineovermotivation #holdthestandard #sargesays #fitnessmindset #over40 #weightloss #consistency #mindset
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 5 -->
+<div class="script-card" data-type="demo">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">5</div>
+    <h3>Watch me track my meal in 10 seconds</h3>
+    <div class="script-meta"><span class="badge easy">Easy</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      How I track my meals now:<br><br>
+      Step 1: Photograph my plate<br>
+      Step 2: AI estimates my macros<br>
+      Step 3: I adjust the portion if needed<br>
+      Step 4: Save<br><br>
+      No barcode scanning.<br>
+      No weighing food.<br>
+      No 47-ingredient recipes.<br><br>
+      10 seconds. Done.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "This is how I track my meals now. I take a photo of my plate. The AI tells me what it sees and estimates my macros. If the portion looks off, I slide it up or down. Save. That's it. No barcode scanning. No weighing my chicken on a kitchen scale. No entering a 47-ingredient casserole one item at a time. Ten seconds. I'm done. And I actually stick with it — because it's not a part-time job."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      SCREEN RECORDING of the actual app flow. Film your real lunch plate, open the app, photograph it, show the AI result, adjust portion, save. Speed up the boring parts. Add a timer overlay counting "1... 2... 3..." to emphasize speed. This is your product demo — make it feel effortless. 30-45 seconds. Pin this as a top comment when people ask "what app?"
+    </div>
+    <div class="hashtags">
+      #calorietracking #mealtracking #foodlog #aitechnology #fitnesstips #holdthestandard #sargesays #easytracking #macrocounting #fooddiary
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 6 -->
+<div class="script-card" data-type="story">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">6</div>
+    <h3>Why you keep falling off</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      You don't keep falling off<br>
+      because you lack discipline.<br><br>
+      You keep falling off because<br>
+      your plan requires a PERFECT day<br>
+      to work.<br><br>
+      Miss one meal prep Sunday?<br>
+      Whole week collapses.<br><br>
+      Eat something "bad"?<br>
+      Well, day's ruined, might as well...<br><br>
+      The fix:<br>
+      A standard so simple<br>
+      you can hold it on a BAD day.<br><br>
+      Three things. That's all.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "I need you to hear something. You don't keep falling off because you lack discipline. You keep falling off because your plan requires a perfect day to work. Miss one meal prep? The whole week falls apart. Eat something off-plan? Well, the day's ruined, might as well start over Monday. That's not a you problem. That's a system problem. The fix is a standard so simple you can hold it on a bad day. Three things. Protein, water, movement. You can do that on a sick day. On a travel day. On an 'I ate pizza for lunch' day. Hold the standard."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      This one HITS. Expect high shares from women who feel personally called out (in a good way). Talk to camera, conversational, like you're sitting across from a friend. The "might as well start over Monday" line will resonate hard — it's universal. 45-60 seconds. Longer is fine here — the story carries it.
+    </div>
+    <div class="hashtags">
+      #fallingoff #dietfails #startingover #mondaymotivation #holdthestandard #sargesays #weightlossstruggle #over40 #consistency #reallife
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 7 -->
+<div class="script-card" data-type="edu">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">7</div>
+    <h3>The water math most people get wrong</h3>
+    <div class="script-meta"><span class="badge easy">Easy</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      "Drink 8 glasses of water a day"<br><br>
+      That's not even a real number.<br><br>
+      Here's the real math:<br>
+      Your bodyweight in lbs ÷ 2 = oz per day<br><br>
+      160 lbs? Drink 80 oz.<br>
+      200 lbs? Drink 100 oz.<br><br>
+      Most of you are getting HALF that.<br><br>
+      This is why you're:<br>
+      - Tired at 2pm<br>
+      - Snacking when you're not hungry<br>
+      - Retaining water (ironic, right?)<br><br>
+      Drink up. You're worth the upkeep.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Eight glasses of water a day. That's what they told us, right? That's not even a real number. Here's the actual math. Take your body weight in pounds, divide by two. That's how many ounces you need. If you're 160, that's 80 ounces. If you're 200, that's 100. Most women are getting half of that. And then wondering why they're exhausted at 2pm, snacking when they're not even hungry, and retaining water — which is ironic when you think about it. Drink up. You're worth the upkeep."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Use text overlays with the math — make it visual. Hold up a water bottle for scale. The "you're worth the upkeep" closer is the Sarge voice — caring but firm. High save/bookmark potential. 30-40 seconds. Film near your kitchen sink or holding a big water bottle.
+    </div>
+    <div class="hashtags">
+      #waterintake #hydration #drinkmorewater #healthtips #over40 #holdthestandard #sargesays #waterchallenge #weightlosstips #womenshealth
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 8 -->
+<div class="script-card" data-type="hook">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">8</div>
+    <h3>Day 1 is not starting over</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      Day 1 is not "starting over."<br><br>
+      Day 1 is "I showed up again."<br><br>
+      You didn't lose your progress<br>
+      because you missed a few days.<br><br>
+      You lost it because you convinced<br>
+      yourself you had to start from zero.<br><br>
+      You don't.<br><br>
+      The standard didn't move.<br>
+      You just stepped away from it.<br><br>
+      Step back.<br>
+      It's right where you left it.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Can we stop calling it 'starting over'? You're not starting over. You're showing up again. And there's a big difference. You didn't lose your progress because you missed a few days. You lost it because you convinced yourself you had to start from zero. You don't. The standard didn't move. You just stepped away from it for a minute. Step back. It's right where you left it. Let's go."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      This is your highest potential viral video. The reframe from "starting over" to "showing up again" will resonate massively with women who feel shame about gaps. Film with emotion — like you're talking directly to one person. Add soft motivational music underneath. 30-40 seconds. Post on a Monday morning for maximum "I needed to hear this" energy.
+    </div>
+    <div class="hashtags">
+      #day1 #startingover #motivation #nevergiveup #holdthestandard #sargesays #weightlossjourney #keepgoing #over40fitness #youvegotthis
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 9 -->
+<div class="script-card" data-type="story">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">9</div>
+    <h3>What I ate today (realistic, not aesthetic)</h3>
+    <div class="script-meta"><span class="badge easy">Easy</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      What I ate today<br>
+      (realistic, not aesthetic)<br><br>
+      Breakfast: Greek yogurt + berries + granola<br>
+      (28g protein before 9am)<br><br>
+      Lunch: Leftover chicken + rice + broccoli<br>
+      (photographed it, AI said 42g protein. Adjusted portion down slightly.)<br><br>
+      Snack: Protein shake because I was behind<br>
+      (30g protein in 2 minutes)<br><br>
+      Dinner: Tacos. Real tacos. With cheese.<br>
+      (Sarge doesn't do deprivation.)<br><br>
+      Total protein: 127g. Standard held.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Here's what I actually ate today. Not the aesthetic version — the real one. Greek yogurt and berries for breakfast — 28 grams of protein before nine. Leftover chicken and rice for lunch, I just photographed the plate and the app told me the macros. Had a protein shake in the afternoon because I was behind on my number. And dinner? Tacos. Real tacos. With cheese. Because this isn't about deprivation. It's about hitting your standard. 127 grams of protein today. Standard held."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Film each meal as you eat it throughout the day, compile into one video. Show the actual plates — messy, real, not Instagram-worthy. The "real tacos with cheese" line humanizes the brand. Show the app briefly when photographing lunch. This format is INFINITELY repeatable — do one every week. 45-60 seconds.
+    </div>
+    <div class="hashtags">
+      #whatieatinaday #realisticmeals #proteingoals #over40 #holdthestandard #sargesays #mealideas #norestrictivedieting #intuitiveeating #macros
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+<!-- SCRIPT 10 -->
+<div class="script-card" data-type="hook">
+  <div class="script-header" onclick="toggleScript(this)">
+    <div class="script-num">10</div>
+    <h3>30 days from now</h3>
+    <div class="script-meta"><span class="badge viral">Viral</span></div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="script-body">
+    <div class="section-label">On-screen text</div>
+    <div class="script-text">
+      30 days from now,<br>
+      you can be 30 days into it<br>
+      or 30 days into wishing you'd started.<br><br>
+      The women who change?<br>
+      They don't wait for perfect.<br>
+      They don't wait for Monday.<br>
+      They don't wait for motivation.<br><br>
+      They set a standard.<br>
+      They hold it today.<br>
+      Then they hold it again tomorrow.<br><br>
+      That's the whole secret.<br><br>
+      Your move.
+    </div>
+    <div class="section-label">Voiceover</div>
+    <div class="voiceover">
+      "Thirty days from now, you can be thirty days into it — or thirty days further into wishing you'd started. The women who actually change their lives? They don't wait for the perfect moment. They don't wait for Monday. They don't wait to feel motivated. They set a standard. They hold it today. And then they hold it again tomorrow. That's the whole secret. Nobody's coming to do this for you. But you've got everything you need. Your move."
+    </div>
+    <div class="section-label">Production notes</div>
+    <div class="production-note">
+      Close-up, direct to camera. Speak slowly and deliberately — every line should land. This is your "call to action" video — the one that converts followers into app downloads. End with a 3-second pause on "Your move." then cut. Add in caption: "Link in bio." Pin as first video on your profile. 30-40 seconds.
+    </div>
+    <div class="hashtags">
+      #30daychallenge #startnow #nomoreexcuses #holdthestandard #sargesays #weightlossjourney #over40fitness #yourmove #discipline #transformation
+    </div>
+    <button class="copy-btn" onclick="copyScript(this)">Copy full script</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function toggleScript(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+function copyScript(btn) {
+  const body = btn.closest('.script-body');
+  const onscreen = body.querySelector('.script-text')?.textContent.trim() || '';
+  const vo = body.querySelector('.voiceover')?.textContent.trim() || '';
+  const notes = body.querySelector('.production-note')?.textContent.trim() || '';
+  const hashtags = body.querySelector('.hashtags')?.textContent.trim() || '';
+  const full = `ON-SCREEN TEXT:\n${onscreen}\n\nVOICEOVER:\n${vo}\n\nPRODUCTION NOTES:\n${notes}\n\nHASHTAGS:\n${hashtags}`;
+  navigator.clipboard.writeText(full).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy full script'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function filterScripts(type) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.script-card').forEach(card => {
+    if (type === 'all' || card.dataset.type === type) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
